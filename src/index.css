@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply font-poppins;
+}
+
+.rarity-5 {
+  background-image: url(https://rerollcdn.com/STARRAIL/Rarity/5_sm.png);
+  background-size: contain;
+  background-position: 50%;
+}
+
+.rarity-4 {
+  background-image: url(https://rerollcdn.com/STARRAIL/Rarity/4_sm.png);
+  background-size: contain;
+  background-position: 50%;
+}
+
+.rarity-3 {
+  background-image: url(https://rerollcdn.com/STARRAIL/Rarity/3_sm.png);
+  background-size: contain;
+  background-position: 50%;
+}
