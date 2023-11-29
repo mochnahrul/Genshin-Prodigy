@@ -10,6 +10,7 @@ const Main = () => {
   const [characters, setCharacters] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [selectedVision, setSelectedVision] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     getVisions((data) => {
@@ -18,10 +19,12 @@ const Main = () => {
   }, []);
 
   useEffect(() => {
+    setIsLoading(true);
     getCharacters((data) => {
       setCharacters(data);
+      setIsLoading(false);
     });
-  }, []);
+  }, [setIsLoading]);
 
   const filteredCharacters = useMemo(() => {
     const trimmedInput = searchInput.trim().toLowerCase();
@@ -78,51 +81,57 @@ const Main = () => {
         {/* Character List */}
         <div className="flex flex-row flex-wrap items-center justify-center pb-[5rem] pt-[1rem]">
           <div className="w-full px-3 lg:w-4/5">
-            <div className="overflow-hidden rounded-xl shadow-xl">
-              <div className="flex flex-row flex-wrap items-center justify-between gap-y-4 bg-emerald-700 px-3 py-6 md:px-5 md:py-8">
-                <div className="w-full px-3 lg:w-[60%]">
-                  <div className="flex flex-row flex-wrap items-center justify-center lg:justify-start">
-                    {visions.length > 0 &&
-                      visions.map((vision, index) => (
-                        <div
-                          key={index + 1}
-                          className="w-[14.28571428571429%] md:w-[10%]"
-                          onClick={() => handleVisionClick(vision.name)}
-                        >
-                          <Vision
-                            src={vision.image}
-                            alt={vision.name}
-                            selected={vision.name === selectedVision}
-                          />
-                        </div>
-                      ))}
+            {isLoading ? (
+              <div className="text-center">
+                <p className="text-lg text-slate-100">Loading...</p>
+              </div>
+            ) : (
+              <div className="overflow-hidden rounded-xl shadow-xl">
+                <div className="flex flex-row flex-wrap items-center justify-between gap-y-4 bg-emerald-700 px-3 py-6 md:px-5 md:py-8">
+                  <div className="w-full px-3 lg:w-[60%]">
+                    <div className="flex flex-row flex-wrap items-center justify-center lg:justify-start">
+                      {visions.length > 0 &&
+                        visions.map((vision, index) => (
+                          <div
+                            key={index + 1}
+                            className="w-[14.28571428571429%] md:w-[10%]"
+                            onClick={() => handleVisionClick(vision.name)}
+                          >
+                            <Vision
+                              src={vision.image}
+                              alt={vision.name}
+                              selected={vision.name === selectedVision}
+                            />
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                  <div className="w-full px-3 lg:w-[40%]">
+                    <SearchBar
+                      value={searchInput}
+                      onChange={(e) => setSearchInput(e.target.value)}
+                    />
                   </div>
                 </div>
-                <div className="w-full px-3 lg:w-[40%]">
-                  <SearchBar
-                    value={searchInput}
-                    onChange={(e) => setSearchInput(e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="flex flex-row flex-wrap gap-y-6 bg-slate-800 px-3 py-6 md:px-5 md:py-8">
-                {filteredCharacters.map((character, index) => (
-                  <div
-                    key={index + 1}
-                    className="w-1/4 px-3 md:w-1/6 lg:w-[12.5%]"
-                  >
-                    <CharacterCard
-                      id={character.name}
-                      src={character.image}
-                      alt={character.name}
-                      rarity={character.rarity}
+                <div className="flex flex-row flex-wrap gap-y-6 bg-slate-800 px-3 py-6 md:px-5 md:py-8">
+                  {filteredCharacters.map((character, index) => (
+                    <div
+                      key={index + 1}
+                      className="w-1/4 px-3 md:w-1/6 lg:w-[12.5%]"
                     >
-                      {character.name}
-                    </CharacterCard>
-                  </div>
-                ))}
+                      <CharacterCard
+                        id={character.name}
+                        src={character.image}
+                        alt={character.name}
+                        rarity={character.rarity}
+                      >
+                        {character.name}
+                      </CharacterCard>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
         {/* End of Character List */}

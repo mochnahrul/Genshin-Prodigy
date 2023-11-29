@@ -9,10 +9,13 @@ const DetailLayout = () => {
   const { name } = useParams();
   const [character, setCharacter] = useState([]);
   const [selectedRole, setSelectedRole] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
     getCharacterBuild(name, (data) => {
       setCharacter(data);
+      setIsLoading(false);
     });
   }, [name]);
 
@@ -28,10 +31,14 @@ const DetailLayout = () => {
 
   return (
     <div className="min-h-screen bg-slate-900">
-      {Object.keys(character).length > 0 && (
-        <div className="container">
-          <div className="flex flex-row flex-wrap py-[5rem]">
-            <div className="w-full px-3">
+      <div className="container">
+        <div className="flex flex-row flex-wrap py-[5rem]">
+          <div className="w-full px-3">
+            {isLoading ? (
+              <div className="text-center">
+                <p className="text-lg text-slate-100">Loading...</p>
+              </div>
+            ) : (
               <div className="overflow-hidden rounded-xl shadow-xl">
                 <div className="flex flex-row flex-wrap bg-emerald-700 px-0 py-6 md:px-2 md:py-8">
                   <div className="w-full px-3">
@@ -201,10 +208,10 @@ const DetailLayout = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };
